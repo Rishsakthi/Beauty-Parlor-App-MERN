@@ -164,7 +164,8 @@ export default function Form() {
       const res = await axios.post("http://localhost:7001/api/appointment/add", formData,
         {
         headers: {
-          "Content-Type": "multipart/form-data"
+          "Content-Type": "multipart/form-data",
+           Authorization: `Bearer ${localStorage.getItem("token")}`
         }
       });
       alert(res.data.message);

@@ -22,14 +22,20 @@ export default function Bookings() {
     <Box>
       <Typography variant="h5" mb={2}>All Bookings</Typography>
 
-      {data.map((b) => (
-        <Paper key={b._id} sx={{ p: 2, mb: 2 }}>
-          <Typography><b>Name:</b> {b.name}</Typography>
-          <Typography><b>Phone:</b> {b.phone}</Typography>
-          <Typography><b>Service:</b> {b.service.join(", ")}</Typography>
-          <Typography><b>Date:</b> {new Date(b.appointmentdate).toLocaleString()}</Typography>
-        </Paper>
+      {data
+        .filter((b) => new Date(b.appointmentdate) > new Date())
+        .map((b) => (
+          <Paper key={b._id} sx={{ p: 2, mb: 2 }}>
+            <Typography><b>Name:</b> {b.name}</Typography>
+            <Typography><b>Phone:</b> {b.phone}</Typography>
+            <Typography><b>Service:</b> {b.service.join(", ")}</Typography>
+            <Typography><b>occasion:</b>{b.occasion}</Typography>
+            <Typography>
+              <b>Date:</b> {new Date(b.appointmentdate).toLocaleString().slice(0,9)}
+            </Typography>
+          </Paper>
       ))}
+
     </Box>
   );
 }

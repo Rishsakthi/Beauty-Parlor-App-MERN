@@ -6,7 +6,6 @@ const authorizeRoles=(...allowedRoles)=>{
         next();
     }
 
-
 }
 
 

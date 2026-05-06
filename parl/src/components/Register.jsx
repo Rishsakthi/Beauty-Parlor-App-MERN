@@ -19,6 +19,11 @@ export default function Register() {
   };
 
   const handleRegister = async () => {
+    if (!form.username.trim() || !form.password.trim()) {
+    setError("Username and Password are required");
+    setOpen(true);
+    return;
+    }
     try {
       await axios.post("http://localhost:7001/api/auth/register", form);
 
@@ -68,6 +73,7 @@ export default function Register() {
         value={form.username}
         onChange={handleChange}
         fullWidth
+        required
       />
 
       <TextField
@@ -77,6 +83,7 @@ export default function Register() {
         value={form.password}
         onChange={handleChange}
         fullWidth
+        required
       />
 
       <Button variant="contained" sx={{fontFamily:"cursive"}} onClick={handleRegister}>

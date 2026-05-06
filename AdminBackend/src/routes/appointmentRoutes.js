@@ -1,6 +1,8 @@
 const router = require("express").Router();
 const multer = require("multer");
 const { addAppointment, getAllAppointments } = require("../controller/appointmentController");
+const auth = require("../middlewares/authMiddleware");
+
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -15,7 +17,7 @@ const upload = multer({ storage });
 
 
 router.post(
-  "/add",
+  "/add",auth,
   upload.fields([
     { name: "frontfile", maxCount: 1 },
     { name: "backfile", maxCount: 1 }
@@ -23,6 +25,6 @@ router.post(
   addAppointment
 );
 
-router.get("/all", getAllAppointments);
+router.get("/all",auth, getAllAppointments);
 
 module.exports = router;
