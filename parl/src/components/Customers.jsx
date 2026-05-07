@@ -28,7 +28,7 @@ export default function Customers() {
 
   return (
     <Box>
-      <Typography variant="h5" mb={2}>Frequent Customers</Typography>
+      <Typography variant="h5" mb={2}>Frequent Customers.....</Typography>
 
       {loading ? (
       

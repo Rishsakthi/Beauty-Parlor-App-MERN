@@ -46,7 +46,7 @@ export default function Services() {
           }
         });
       },
-      { threshold: 0 }
+      { threshold: 0.1 }
     );
 
     if (img1Ref.current) observer.observe(img1Ref.current);
@@ -74,7 +74,7 @@ export default function Services() {
           src={Service1}
           sx={{
             width: "50%",
-            height: "550px",
+            height: "600px",
             objectFit: "cover",
             transform: visible.img1 ? "translateX(0)" : "translateX(-100px)",
             opacity: visible.img1 ? 1 : 0,
@@ -169,7 +169,7 @@ export default function Services() {
           src={Service3}
           sx={{
             width: "50%",
-            height: "550px",
+            height: "600px",
             objectFit: "cover",
             transform: visible.img3 ? "translateX(0)" : "translateX(-100px)",
             opacity: visible.img3 ? 1 : 0,

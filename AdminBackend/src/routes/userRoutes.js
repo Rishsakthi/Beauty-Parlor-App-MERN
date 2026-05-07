@@ -10,4 +10,6 @@ router.get("/user",verifyToken,authorizeRoles("admin","user"),(req,res)=>{
     res.json({message:`Welcome user`})
 });
 
+
+
 module.exports=router;

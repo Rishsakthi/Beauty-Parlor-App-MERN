@@ -15,6 +15,8 @@ import AdminServices from "./components/AdminServices"
 import Booking from "./components/Booking"
 import AppointmentForm from './components/AppointmentForm'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import ManageUser from './components/ManageUser'
+import { Box } from '@mui/material'
 
 function AdminRoute({ children }) {
   const role = localStorage.getItem("role");
@@ -28,34 +30,48 @@ function AdminRoute({ children }) {
 function App() {
   return (
     <BrowserRouter>
-      <Navbar />
-      <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/services' element={<Services />} />
-        <Route path='/about' element={<About />} />
-        <Route path='/gallery' element={<Gallery />} />
-        <Route path='/contact' element={<Contact />} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/register' element={<Register />} />
-
-        <Route
-          path="/dashboard"
-          element={
-            <AdminRoute>
-              <DashboardLayout />
-            </AdminRoute>
-          }
+        <Box
+          sx={{
+            minHeight: "100vh",
+            display: "flex",
+            flexDirection: "column"
+          }}
         >
-          <Route index element={<DashboardHome />} />
-          <Route path="customers" element={<Customers />} />
-          <Route path="AdminServices" element={<AdminServices />} />
-          <Route path="booking" element={<Booking />} />
-        </Route>
+          <Navbar />
 
-        <Route path='/appointmentform' element={<AppointmentForm />} />
-      </Routes>
-      <Footer />
-    </BrowserRouter>
+          <Box sx={{ flex: 1 }}>
+            <Routes>
+              <Route path='/' element={<Home />} />
+              <Route path='/services' element={<Services />} />
+              <Route path='/about' element={<About />} />
+              <Route path='/gallery' element={<Gallery />} />
+              <Route path='/contact' element={<Contact />} />
+              <Route path='/login' element={<Login />} />
+              <Route path='/register' element={<Register />} />
+
+              <Route
+                path="/dashboard"
+                element={
+                  <AdminRoute>
+                    <DashboardLayout />
+                  </AdminRoute>
+                }
+              >
+                <Route index element={<DashboardHome />} />
+                <Route path="customers" element={<Customers />} />
+                <Route path="AdminServices" element={<AdminServices />} />
+                <Route path="booking" element={<Booking />} />
+                <Route path="manageuser" element={<ManageUser />} />
+              </Route>
+
+              <Route path='/appointmentform' element={<AppointmentForm />} />
+              <Route path='*' element={<h1>PAGE NOT FOUND</h1>} />
+            </Routes>
+          </Box>
+
+          <Footer />
+        </Box>
+      </BrowserRouter>
   )
 }
 

@@ -28,16 +28,12 @@ export default function Register() {
       setOpen(true);
       return;
     }
-
     try {
-
       await axios.post(
         "http://localhost:7001/api/auth/register",
         form
       );
-
       alert("Registered successfully");
-
       navigate("/login");
 
     } catch (err) {
@@ -65,7 +61,6 @@ export default function Register() {
         px: 2
       }}
     >
-
       <Box
         sx={{
           width: 450,
@@ -80,7 +75,6 @@ export default function Register() {
           color: "white"
         }}
       >
-
         <Typography
           variant="h4"
           sx={{

@@ -65,7 +65,7 @@ const addAppointment = async (req, res) => {
 };
 const getAllAppointments = async (req, res) => {
   try {
-    const data = await Appointment.find().sort({ createdAt: -1 });
+    const data = await Appointment.find().sort({ createdAt: 1 });
 
     res.status(200).json(data);
   } catch (err) {

@@ -1,4 +1,5 @@
 const Appointment = require("../models/appointmentModel");
+const User=require("../models/userModel")
 
 
 const frequentCustomers = async (req, res) => {
@@ -31,4 +32,43 @@ const topServices = async (req, res) => {
   res.json(data);
 };
 
-module.exports = { frequentCustomers, topServices };
+const getUsers = async (req, res) => {
+  try{
+  const users = await User.find().select("-password");
+  res.json(users);
+  }
+  catch(err){
+    console.log(err)
+  }
+};
+
+const deleteUser = async (req, res) => {
+  try{
+  await User.findByIdAndDelete(req.params.id);
+  res.json({ message: "User deleted" });
+  }
+  catch(err){
+    console.log(err)
+  }
+};
+const dashboardStats = async (req, res) => {
+  try {
+    const bookingCount = await Appointment.countDocuments();
+
+    const customerCount = await Appointment.distinct("phone");
+
+    const userCount = await User.countDocuments();
+
+    res.json({
+      bookings: bookingCount,
+      customers: customerCount.length,
+      users: userCount
+    });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+module.exports = { frequentCustomers, topServices,getUsers,deleteUser,dashboardStats };

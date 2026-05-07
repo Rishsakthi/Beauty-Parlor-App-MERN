@@ -5,7 +5,12 @@ export default function DashboardLayout() {
   const navigate = useNavigate();
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box
+      sx={{
+        display: "flex",
+        minHeight: "100vh"
+      }}
+    >
 
       <Box sx={{ width: 220, bgcolor: "black", color: "white", p: 2 }}>
         <Button fullWidth onClick={() => navigate("/dashboard")}>
@@ -22,6 +27,9 @@ export default function DashboardLayout() {
 
         <Button fullWidth onClick={() => navigate("/dashboard/booking")}>
           Booking
+        </Button>
+        <Button fullWidth onClick={() => navigate("/dashboard/manageuser")}>
+          Manage User
         </Button>
       </Box>
 
