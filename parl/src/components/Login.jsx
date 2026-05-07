@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import beauty from "../assets/beauty.jpg";
 
 export default function Login() {
+
   const navigate = useNavigate();
 
   const [token, setToken] = useState(() => localStorage.getItem("token"));
@@ -15,22 +16,28 @@ export default function Login() {
     setToken(null);
     navigate("/login", { replace: true });
   };
-
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
-
   const handleLogin = async () => {
     try {
-      const res = await axios.post("http://localhost:7001/api/auth/login", form);
+
+      const res = await axios.post(
+        "http://localhost:7001/api/auth/login",
+        form
+      );
+
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("role", res.data.role);
+
       setToken(res.data.token);
+
       if (res.data.role === "admin") {
         navigate("/dashboard", { replace: true });
       } else {
         navigate("/", { replace: true });
       }
+
     } catch (err) {
       console.error(err);
       alert("Invalid credentials");
@@ -38,81 +45,118 @@ export default function Login() {
   };
 
   return (
+
     <Box
       sx={{
         minHeight: "100vh",
         width: "100%",
-        backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${beauty})`,
+        backgroundImage: `linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)), url(${beauty})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         display: "flex",
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
+        px: 2
       }}
     >
       <Box
         sx={{
-          width: 650,
-          margin: "100px auto",
+          width: 450,
           display: "flex",
           flexDirection: "column",
           gap: 2,
-          padding: 3,
-          boxShadow: 3,
-          borderRadius: 2,
-          background: "white"
+          padding: 5,
+          borderRadius: 4,
+          background: "rgba(0,0,0,0.85)",
+          border: "1px solid #333",
+          boxShadow: "0px 0px 20px rgba(0,0,0,0.5)",
+          color: "white"
         }}
       >
         {token ? (
           <>
             <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: 3
+              }}
+            >
+              <Typography
+                variant="h4"
                 sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  gap: 2
+                  fontWeight: "bold",
+                  textAlign: "center",
+                  color: "white"
                 }}
               >
-                <Typography
-                  variant="h5"
-                  sx={{
-                    fontFamily: "cursive",
-                    textAlign: "center"
-                  }}
-                >
-                  You are logged in
-                </Typography>
-
-                <Button
-                  variant="contained"
-                  color="error"
-                  onClick={handleLogout}
-                  sx={{
-                    width: "200px",
-                    fontFamily: "cursive",
-                    borderRadius: "20px"
-                  }}
-                >
-                  Logout
+                You are logged in
+              </Typography>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={handleLogout}
+                sx={{
+                  width: "200px",
+                  borderRadius: "30px",
+                  py: 1.2,
+                  fontWeight: "bold"
+                }}
+              >
+                Logout
               </Button>
             </Box>
           </>
         ) : (
           <>
-            <Box >
-              <Typography variant="h5" sx={{ fontFamily: "cursive", textAlign: "center" ,mb:5}}>
+            <Box>
+              <Typography
+                variant="h4"
+                sx={{
+                  textAlign: "center",
+                  mb: 5,
+                  fontWeight: "bold",
+                  letterSpacing: 1,
+                  color: "white"
+                }}
+              >
                 Login
               </Typography>
+              <TextField
+                sx={{
+                  mb: 3,
+                  input: {
+                    color: "white"
+                  },
 
-              <TextField sx={{mb:2}}
+                  label: {
+                    color: "#bbb"
+                  },
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: 3,
+                    background: "#111"
+                  }
+                }}
                 label="Username"
                 name="username"
                 value={form.username}
                 onChange={handleChange}
                 fullWidth
               />
-
               <TextField
+                sx={{
+                  input: {
+                    color: "white"
+                  },
+                  label: {
+                    color: "#bbb"
+                  },
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: 3,
+                    background: "#111"
+                  }
+                }}
                 label="Password"
                 type="password"
                 name="password"
@@ -120,14 +164,46 @@ export default function Login() {
                 onChange={handleChange}
                 fullWidth
               />
-
-              <Button sx={{mt:2,width:"100%",fontFamily:"cursive"}} variant="contained" onClick={handleLogin}>
+              <Button
+                sx={{
+                  mt: 3,
+                  width: "100%",
+                  background: "white",
+                  color: "black",
+                  borderRadius: "30px",
+                  py: 1.5,
+                  fontWeight: "bold",
+                  fontSize: "16px",
+                  "&:hover": {
+                    background: "#ddd"
+                  }
+                }}
+                variant="contained"
+                onClick={handleLogin}
+              >
                 Login
               </Button>
-
-              <Typography variant="h6" sx={{ textAlign: "center", fontFamily: "cursive", mt:2 }}>
-                If you don't have an account, <a href="/register">Register here</a>
+              <Typography
+                variant="body1"
+                sx={{
+                  textAlign: "center",
+                  mt: 3,
+                  color: "#ccc"
+                }}
+              >
+                If you don't have an account,{" "}
+                <a
+                  href="/register"
+                  style={{
+                    color: "white",
+                    fontWeight: "bold",
+                    textDecoration: "none"
+                  }}
+                >
+                  Register here
+                </a>
               </Typography>
+
             </Box>
           </>
         )}

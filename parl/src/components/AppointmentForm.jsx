@@ -8,7 +8,7 @@ import axios from 'axios';
 import beauty from "../assets/beauty.jpg"
 
 export default function Form() {
-  
+
   const initialState = {
     name: "",
     phone: "",
@@ -21,6 +21,7 @@ export default function Form() {
     appointmentdate: "",
     service: [],
   };
+
   const [User, setUser] = useState(initialState);
   const [cities, setCities] = useState([]);
   const [frontfile, setFrontfile] = useState(null);
@@ -149,29 +150,31 @@ export default function Form() {
 
     const formData = new FormData();
 
-
     Object.keys(User).forEach(key => {
       if (key === "service") {
-        formData.append("service", JSON.stringify(User.service)); 
+        formData.append("service", JSON.stringify(User.service));
       } else {
         formData.append(key, User[key]);
       }
     });
+
     formData.append("frontfile", frontfile);
     formData.append("backfile", backfile);
 
     try {
       const res = await axios.post("http://localhost:7001/api/appointment/add", formData,
         {
-        headers: {
-          "Content-Type": "multipart/form-data",
-           Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
-      });
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+          }
+        });
+
       alert(res.data.message);
       setUser(initialState);
+
     } catch (err) {
-      console.log(err);
+      alert(err.response.data.message);
     }
   };
 
@@ -180,197 +183,348 @@ export default function Form() {
   const fieldStyle = { marginBottom: "24px" };
 
   return (
-    <Box sx={{background:"black",backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
-                            url(${beauty})`, }}>
+
     <Box
       sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        maxWidth: 700,
-        margin: "0 auto",
-        padding: 10,
-        backgroundColor: "white",
-        borderRadius: 2,
-        border: 2,
-        
+        minHeight: "100vh",
+        backgroundImage: `linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+        url(${beauty})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        py: 5
       }}
     >
-      <Typography
-        variant='h5'
-        sx={{
-          color: "white",
-          backgroundColor: "black",
-          borderRadius: 2,
-          mb: 2
-        }}
-      >
-        WELCOME TO SAKTHI PARLOR
-      </Typography>
 
-      <form
-        onSubmit={handlesubmit}
-        style={{
-          width: "100%",
+      <Box
+        sx={{
           display: "flex",
           flexDirection: "column",
+          alignItems: "center",
+          maxWidth: 750,
+          margin: "0 auto",
+          padding: 5,
+          background: "rgba(0,0,0,0.8)",
+          borderRadius: 4,
+          border: "1px solid #333",
+          boxShadow: "0px 0px 25px rgba(0,0,0,0.5)",
+          color: "white"
         }}
       >
 
-        <div style={fieldStyle}>
-          <TextField fullWidth label="Name" value={User.name}
-            onChange={(e) => {
-              const val = e.target.value.replace(/[^A-Za-z\s]/g, "");
-              setUser({ ...User, name: val });
-              validateField("name", val);
-            }}
-            slotProps={{htmlInput:{maxLength:20,minLength:3}}}
-            error={!!errors.name} helperText={errors.name}
-          />
-        </div>
+        <Typography
+          variant='h4'
+          sx={{
+            color: "white",
+            fontWeight: "bold",
+            letterSpacing: 2,
+            mb: 4,
+            borderBottom: "2px solid white",
+            pb: 1
+          }}
+        >
+          WELCOME TO SAKTHI PARLOR
+        </Typography>
 
-        <div style={fieldStyle}>
-          <TextField fullWidth label="Phone" value={User.phone}
-            onChange={(e) => {
-              const val = e.target.value.replace(/\D/g, "");
-              setUser({ ...User, phone: val });
-              validateField("phone", val);
-            }}
-            slotProps={{htmlInput:{maxLength:10}}}
-            error={!!errors.phone} helperText={errors.phone}
-          />
-        </div>
+        <form
+          onSubmit={handlesubmit}
+          style={{
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
 
-        <div style={fieldStyle}>
-          <TextField fullWidth label="Email" value={User.email}
-            onChange={(e) => {
-              setUser({ ...User, email: e.target.value });
-              validateField("email", e.target.value);
-            }}
-            error={!!errors.email} helperText={errors.email}
-          />
-        </div>
-
-        <div style={fieldStyle}>
-          <FormControl error={!!errors.gender}>
-            <FormLabel>Gender</FormLabel>
-            <RadioGroup value={User.gender}
+          <div style={fieldStyle}>
+            <TextField
+              fullWidth
+              label="Name"
+              value={User.name}
               onChange={(e) => {
-                setUser({ ...User, gender: e.target.value });
-                validateField("gender", e.target.value);
-              }}>
-              <FormControlLabel value="Male" control={<Radio />} label="Male" />
-              <FormControlLabel value="Female" control={<Radio />} label="Female" />
-              <FormControlLabel value="others" control={<Radio />} label="Don't want to mention" />
-            </RadioGroup>
-            {errors.gender && <FormHelperText>{errors.gender}</FormHelperText>}
-          </FormControl>
-        </div>
+                const val = e.target.value.replace(/[^A-Za-z\s]/g, "");
+                setUser({ ...User, name: val });
+                validateField("name", val);
+              }}
+              slotProps={{ htmlInput: { maxLength: 20, minLength: 3 } }}
+              error={!!errors.name}
+              helperText={errors.name}
+              sx={{
+                input: { color: "white" },
+                label: { color: "#ccc" },
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: 3,
+                  background: "#111",
+                }
+              }}
+            />
+          </div>
 
-        <div style={fieldStyle}>
-          <FormControl fullWidth error={!!errors.country}>
-            <FormLabel style={{ marginBottom: "6px" }}>Country</FormLabel>
-            <Select value={User.country} onChange={handleCountryChange}>
-              <MenuItem value="India">India</MenuItem>
-              <MenuItem value="USA">USA</MenuItem>
-              <MenuItem value="Canada">Canada</MenuItem>
-            </Select>
-            {errors.country && <FormHelperText>{errors.country}</FormHelperText>}
-          </FormControl>
-        </div>
-
-        <div style={fieldStyle}>
-          <FormControl fullWidth error={!!errors.city}>
-            <FormLabel style={{ marginBottom: "6px" }}>City</FormLabel>
-            <Select value={User.city} onChange={handleCityChange}>
-              {cities.map((city) => (
-                <MenuItem key={city} value={city}>{city}</MenuItem>
-              ))}
-            </Select>
-            {errors.city && <FormHelperText>{errors.city}</FormHelperText>}
-          </FormControl>
-        </div>
-
-        <div style={fieldStyle}>
-          <FormLabel style={{ display: "block", marginBottom: "6px" ,color:"inherit"}}>Address</FormLabel>
-          <TextareaAutosize
-            style={{ width: "100%", height: "100px", boxSizing: "border-box" }}
-            value={User.address}
-            onChange={(e) => {
-              setUser({ ...User, address: e.target.value });
-              validateField("address", e.target.value);
-            }}
-          />
-          {errors.address && <FormHelperText error>{errors.address}</FormHelperText>}
-        </div>
-
-        <div style={fieldStyle}>
-          <FormControl error={!!errors.service}>
-            <FormLabel style={{ marginBottom: "6px" }}>Services</FormLabel>
-            <FormGroup>
-              <FormControlLabel control={<Checkbox checked={User.service.includes("Hair Cut")} onChange={handleServiceChange} value="Hair Cut" />} label="Hair Cut" />
-              <FormControlLabel control={<Checkbox checked={User.service.includes("Facial")} onChange={handleServiceChange} value="Facial" />} label="Facial" />
-              <FormControlLabel control={<Checkbox checked={User.service.includes("Threading")} onChange={handleServiceChange} value="Threading" />} label="Threading" />
-              <FormControlLabel control={<Checkbox checked={User.service.includes("Waxing")} onChange={handleServiceChange} value="Waxing" />} label="Waxing" />
-            </FormGroup>
-            {errors.service && <FormHelperText>{errors.service}</FormHelperText>}
-          </FormControl>
-        </div>
-
-        <div style={fieldStyle}>
-          <Button fullWidth variant="contained" component="label"sx={{background:"black"}}>
-            Upload Front
-            <input type="file" hidden onChange={handleFrontFile} />
-          </Button>
-           {frontfile && <Box mt={1}>{frontfile.name}</Box>}
-          {errors.frontfile && <FormHelperText error>{errors.frontfile}</FormHelperText>}
-        </div>
-
-        <div style={fieldStyle}>
-          <Button fullWidth variant="contained" component="label" sx={{background:"black"}}>
-            Upload Back
-            <input type="file" hidden onChange={handleBackFile} />
-          </Button>
-           {backfile && <Box mt={1}>{backfile.name}</Box>}
-          {errors.backfile && <FormHelperText error>{errors.backfile}</FormHelperText>}
-        </div>
-
-        <div style={fieldStyle}>
-          <TextField
-            fullWidth type="date"
-            value={User.appointmentdate}
-            onChange={(e) => {
-              setUser({ ...User, appointmentdate: e.target.value });
-              validateField("appointmentdate", e.target.value);
-            }}
-            slotProps={{htmlInput:{min:todayStr}}}
-            error={!!errors.appointmentdate}
-            helperText={errors.appointmentdate}
-          />
-        </div>
-
-        <div style={fieldStyle}>
-          <FormControl fullWidth>
-            <FormLabel style={{ marginBottom: "6px" }}>Occasion</FormLabel>
-            <Select value={User.occasion}
+          <div style={fieldStyle}>
+            <TextField
+              fullWidth
+              label="Phone"
+              value={User.phone}
               onChange={(e) => {
-                setUser({ ...User, occasion: e.target.value });
-                validateField("occasion", e.target.value);
-              }}>
-              <MenuItem value="Wedding">Wedding</MenuItem>
-              <MenuItem value="Party">Party</MenuItem>
-              <MenuItem value="Regular">Regular</MenuItem>
-            </Select>
-            {errors.occasion && <FormHelperText error>{errors.occasion}</FormHelperText>}
-          </FormControl>
-        </div>
+                const val = e.target.value.replace(/\D/g, "");
+                setUser({ ...User, phone: val });
+                validateField("phone", val);
+              }}
+              slotProps={{ htmlInput: { maxLength: 10 } }}
+              error={!!errors.phone}
+              helperText={errors.phone}
+              sx={{
+                input: { color: "white" },
+                label: { color: "#ccc" },
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: 3,
+                  background: "#111",
+                }
+              }}
+            />
+          </div>
 
-        <Button style={fieldStyle} type="submit" variant="contained" sx={{ borderRadius: "2rem" ,background:"black"}}>
-          Submit
-        </Button>
+          <div style={fieldStyle}>
+            <TextField
+              fullWidth
+              label="Email"
+              value={User.email}
+              onChange={(e) => {
+                setUser({ ...User, email: e.target.value });
+                validateField("email", e.target.value);
+              }}
+              error={!!errors.email}
+              helperText={errors.email}
+              sx={{
+                input: { color: "white" },
+                label: { color: "#ccc" },
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: 3,
+                  background: "#111",
+                }
+              }}
+            />
+          </div>
 
-      </form>
-    </Box>
+          <div style={fieldStyle}>
+            <FormControl error={!!errors.gender}>
+              <FormLabel sx={{ color: "white" }}>Gender</FormLabel>
+
+              <RadioGroup
+                value={User.gender}
+                onChange={(e) => {
+                  setUser({ ...User, gender: e.target.value });
+                  validateField("gender", e.target.value);
+                }}
+              >
+                <FormControlLabel value="Male" control={<Radio sx={{ color: "white" }} />} label="Male" />
+                <FormControlLabel value="Female" control={<Radio sx={{ color: "white" }} />} label="Female" />
+                <FormControlLabel value="others" control={<Radio sx={{ color: "white" }} />} label="Don't want to mention" />
+              </RadioGroup>
+
+              {errors.gender && <FormHelperText>{errors.gender}</FormHelperText>}
+            </FormControl>
+          </div>
+
+          <div style={fieldStyle}>
+            <FormControl fullWidth error={!!errors.country}>
+              <FormLabel sx={{ color: "white", mb: 1 }}>Country</FormLabel>
+
+              <Select
+                value={User.country}
+                onChange={handleCountryChange}
+                sx={{
+                  borderRadius: 3,
+                  background: "#111",
+                  color: "white"
+                }}
+              >
+                <MenuItem value="India">India</MenuItem>
+                <MenuItem value="USA">USA</MenuItem>
+                <MenuItem value="Canada">Canada</MenuItem>
+              </Select>
+
+              {errors.country && <FormHelperText>{errors.country}</FormHelperText>}
+            </FormControl>
+          </div>
+
+          <div style={fieldStyle}>
+            <FormControl fullWidth error={!!errors.city}>
+              <FormLabel sx={{ color: "white", mb: 1 }}>City</FormLabel>
+
+              <Select
+                value={User.city}
+                onChange={handleCityChange}
+                sx={{
+                  borderRadius: 3,
+                  background: "#111",
+                  color: "white"
+                }}
+              >
+                {cities.map((city) => (
+                  <MenuItem key={city} value={city}>{city}</MenuItem>
+                ))}
+              </Select>
+
+              {errors.city && <FormHelperText>{errors.city}</FormHelperText>}
+            </FormControl>
+          </div>
+
+          <div style={fieldStyle}>
+            <FormLabel sx={{ color: "white", mb: 1 }}>
+              Address
+            </FormLabel>
+
+            <TextareaAutosize
+              style={{
+                width: "100%",
+                height: "100px",
+                boxSizing: "border-box",
+                background: "#111",
+                color: "white",
+                borderRadius: "12px",
+                padding: "12px",
+                border: "1px solid #444"
+              }}
+              value={User.address}
+              onChange={(e) => {
+                setUser({ ...User, address: e.target.value });
+                validateField("address", e.target.value);
+              }}
+            />
+
+            {errors.address && <FormHelperText error>{errors.address}</FormHelperText>}
+          </div>
+
+          <div style={fieldStyle}>
+            <FormControl error={!!errors.service}>
+              <FormLabel sx={{ color: "white", mb: 1 }}>
+                Services
+              </FormLabel>
+
+              <FormGroup>
+                <FormControlLabel control={<Checkbox sx={{ color: "white" }} checked={User.service.includes("Hair Cut")} onChange={handleServiceChange} value="Hair Cut" />} label="Hair Cut" />
+                <FormControlLabel control={<Checkbox sx={{ color: "white" }} checked={User.service.includes("Facial")} onChange={handleServiceChange} value="Facial" />} label="Facial" />
+                <FormControlLabel control={<Checkbox sx={{ color: "white" }} checked={User.service.includes("Threading")} onChange={handleServiceChange} value="Threading" />} label="Threading" />
+                <FormControlLabel control={<Checkbox sx={{ color: "white" }} checked={User.service.includes("Waxing")} onChange={handleServiceChange} value="Waxing" />} label="Waxing" />
+              </FormGroup>
+
+              {errors.service && <FormHelperText>{errors.service}</FormHelperText>}
+            </FormControl>
+          </div>
+
+          <div style={fieldStyle}>
+            <Button
+              fullWidth
+              variant="contained"
+              component="label"
+              sx={{
+                background: "black",
+                borderRadius: 3,
+                py: 1.5,
+                "&:hover": {
+                  background: "#222"
+                }
+              }}
+            >
+              Upload Front
+              <input type="file" hidden onChange={handleFrontFile} />
+            </Button>
+
+            {frontfile && <Box mt={1}>{frontfile.name}</Box>}
+            {errors.frontfile && <FormHelperText error>{errors.frontfile}</FormHelperText>}
+          </div>
+
+          <div style={fieldStyle}>
+            <Button
+              fullWidth
+              variant="contained"
+              component="label"
+              sx={{
+                background: "black",
+                borderRadius: 3,
+                py: 1.5,
+                "&:hover": {
+                  background: "#222"
+                }
+              }}
+            >
+              Upload Back
+              <input type="file" hidden onChange={handleBackFile} />
+            </Button>
+
+            {backfile && <Box mt={1}>{backfile.name}</Box>}
+            {errors.backfile && <FormHelperText error>{errors.backfile}</FormHelperText>}
+          </div>
+
+          <div style={fieldStyle}>
+            <TextField
+              fullWidth
+              type="date"
+              value={User.appointmentdate}
+              onChange={(e) => {
+                setUser({ ...User, appointmentdate: e.target.value });
+                validateField("appointmentdate", e.target.value);
+              }}
+              slotProps={{ htmlInput: { min: todayStr } }}
+              error={!!errors.appointmentdate}
+              helperText={errors.appointmentdate}
+              sx={{
+                input: { color: "white" },
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: 3,
+                  background: "#111",
+                }
+              }}
+            />
+          </div>
+
+          <div style={fieldStyle}>
+            <FormControl fullWidth>
+              <FormLabel sx={{ color: "white", mb: 1 }}>
+                Occasion
+              </FormLabel>
+
+              <Select
+                value={User.occasion}
+                onChange={(e) => {
+                  setUser({ ...User, occasion: e.target.value });
+                  validateField("occasion", e.target.value);
+                }}
+                sx={{
+                  borderRadius: 3,
+                  background: "#111",
+                  color: "white"
+                }}
+              >
+                <MenuItem value="Wedding">Wedding</MenuItem>
+                <MenuItem value="Party">Party</MenuItem>
+                <MenuItem value="Regular">Regular</MenuItem>
+              </Select>
+
+              {errors.occasion && <FormHelperText error>{errors.occasion}</FormHelperText>}
+            </FormControl>
+          </div>
+
+          <Button
+            style={fieldStyle}
+            type="submit"
+            variant="contained"
+            sx={{
+              borderRadius: "30px",
+              background: "white",
+              color: "black",
+              fontWeight: "bold",
+              py: 1.5,
+              fontSize: "16px",
+              "&:hover": {
+                background: "#ddd"
+              }
+            }}
+          >
+            Submit
+          </Button>
+
+        </form>
+      </Box>
     </Box>
   );
 }

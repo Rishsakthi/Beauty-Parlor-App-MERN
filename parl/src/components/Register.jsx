@@ -6,9 +6,12 @@ import { Snackbar, Alert } from "@mui/material";
 import beauty from "../assets/beauty.jpg";
 
 export default function Register() {
+
   const navigate = useNavigate();
+
   const [error, setError] = useState("");
   const [open, setOpen] = useState(false);
+
   const [form, setForm] = useState({
     username: "",
     password: ""
@@ -19,92 +22,168 @@ export default function Register() {
   };
 
   const handleRegister = async () => {
+
     if (!form.username.trim() || !form.password.trim()) {
-    setError("Username and Password are required");
-    setOpen(true);
-    return;
+      setError("Username and Password are required");
+      setOpen(true);
+      return;
     }
+
     try {
-      await axios.post("http://localhost:7001/api/auth/register", form);
+
+      await axios.post(
+        "http://localhost:7001/api/auth/register",
+        form
+      );
 
       alert("Registered successfully");
+
       navigate("/login");
 
     } catch (err) {
-       const message = err.response?.data?.message || "Registration failed";
+
+      const message =
+        err.response?.data?.message || "Registration failed";
+
       setError(message);
       setOpen(true);
     }
   };
 
   return (
+
     <Box
-          sx={{
-            minHeight: "100vh",
-            width: "100%",
-            backgroundImage: `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${beauty})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center"
-          }}
-        >
-    <Box
+      sx={{
+        minHeight: "100vh",
+        width: "100%",
+        backgroundImage: `linear-gradient(rgba(0,0,0,0.75), rgba(0,0,0,0.75)), url(${beauty})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        px: 2
+      }}
+    >
+
+      <Box
         sx={{
-          width: 650,
-          margin: "100px auto",
+          width: 450,
           display: "flex",
           flexDirection: "column",
-          gap: 2,
-          padding: 3,
-          boxShadow: 3,
-          borderRadius: 2,
-          background: "white"
+          gap: 3,
+          padding: 5,
+          borderRadius: 4,
+          background: "rgba(0,0,0,0.85)",
+          border: "1px solid #333",
+          boxShadow: "0px 0px 20px rgba(0,0,0,0.5)",
+          color: "white"
         }}
       >
-      <Typography variant="h5" sx={{ textAlign: "center", fontFamily: "cursive" }}>
-        Register
-      </Typography>
 
-      <TextField
-        label="Username"
-        name="username"
-        value={form.username}
-        onChange={handleChange}
-        fullWidth
-        required
-      />
+        <Typography
+          variant="h4"
+          sx={{
+            textAlign: "center",
+            fontWeight: "bold",
+            color: "white",
+            letterSpacing: 1
+          }}
+        >
+          Register
+        </Typography>
 
-      <TextField
-        label="Password"
-        type="password"
-        name="password"
-        value={form.password}
-        onChange={handleChange}
-        fullWidth
-        required
-      />
+        <TextField
+          label="Username"
+          name="username"
+          value={form.username}
+          onChange={handleChange}
+          fullWidth
+          required
+          sx={{
+            input: {
+              color: "white"
+            },
+            label: {
+              color: "#bbb"
+            },
+            "& .MuiOutlinedInput-root": {
+              borderRadius: 3,
+              background: "#111"
+            }
+          }}
+        />
+        <TextField
+          label="Password"
+          type="password"
+          name="password"
+          value={form.password}
+          onChange={handleChange}
+          fullWidth
+          required
+          sx={{
+            input: {
+              color: "white"
+            },
+            label: {
+              color: "#bbb"
+            },
+            "& .MuiOutlinedInput-root": {
+              borderRadius: 3,
+              background: "#111"
+            }
+          }}
+        />
+        <Button
+          variant="contained"
+          onClick={handleRegister}
+          sx={{
+            background: "white",
+            color: "black",
+            borderRadius: "30px",
+            py: 1.5,
+            fontWeight: "bold",
+            fontSize: "16px",
 
-      <Button variant="contained" sx={{fontFamily:"cursive"}} onClick={handleRegister}>
-        Register
-      </Button>
-
-      <Typography sx={{ textAlign: "center", fontFamily:"cursive" }}>
-        Already have an account?{" "}
-        <Link to="/login">Login here</Link>
-      </Typography>
-      <Snackbar
+            "&:hover": {
+              background: "#ddd"
+            }
+          }}
+        >
+          Register
+        </Button>
+        <Typography
+          sx={{
+            textAlign: "center",
+            color: "#ccc"
+          }}
+        >
+          Already have an account?{" "}
+          <Link
+            to="/login"
+            style={{
+              color: "white",
+              fontWeight: "bold",
+              textDecoration: "none"
+            }}
+          >
+            Login here
+          </Link>
+        </Typography>
+        <Snackbar
           open={open}
           autoHideDuration={3000}
           onClose={() => setOpen(false)}
           anchorOrigin={{ vertical: "top", horizontal: "center" }}
         >
-          <Alert severity="error" onClose={() => setOpen(false)}>
+          <Alert
+            severity="error"
+            onClose={() => setOpen(false)}
+          >
             {error}
           </Alert>
-      </Snackbar>
-    </Box>
+        </Snackbar>
+      </Box>
     </Box>
   );
 }

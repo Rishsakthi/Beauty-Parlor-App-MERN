@@ -29,7 +29,14 @@ const addAppointment = async (req, res) => {
       }
 
       const parsedDate = new Date(appointmentdate);
-
+      const leaveDate=[new Date("2026-06-01"),new Date("2026-07-01"),new Date("2026-08-01"),
+        new Date("2026-09-01"),new Date("2026-10-01")
+      ];
+        for(const d of leaveDate){
+            if(parsedDate.toDateString()===d.toDateString()){
+              return res.status(400).json({message:"This Date is not available"});
+            }
+        }
         if (isNaN(parsedDate)) {
           return res.status(400).json({ message: "Invalid appointment date" });
         }
