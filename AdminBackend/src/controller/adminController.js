@@ -59,10 +59,15 @@ const dashboardStats = async (req, res) => {
 
     const userCount = await User.countDocuments();
 
+    const admin = await User.findById(req.user.id);
+
+
     res.json({
       bookings: bookingCount,
       customers: customerCount.length,
-      users: userCount
+      users: userCount,
+      adminName:admin.username
+ 
     });
 
   } catch (err) {
@@ -71,4 +76,4 @@ const dashboardStats = async (req, res) => {
   }
 };
 
-module.exports = { frequentCustomers, topServices,getUsers,deleteUser,dashboardStats };
+module.exports = { frequentCustomers, topServices, getUsers, deleteUser, dashboardStats };

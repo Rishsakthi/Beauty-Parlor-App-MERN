@@ -17,28 +17,24 @@ export default function DashboardHome() {
 
   const [loading, setLoading] = useState(true);
 
-  const fetchStats = async () => {
+  const fetchStats = async (id) => {
     try {
 
       const res = await axios.get(
-        "http://localhost:7001/api/admin/dashboardstats",
+        `http://localhost:7001/api/admin/dashboardstats/${id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`
           }
         }
       );
-
       setStats(res.data);
-
     } catch (err) {
-      console.log(err);
-
+      console.log(err)
     } finally {
       setLoading(false);
     }
   };
-
   useEffect(() => {
     fetchStats();
   }, []);
@@ -54,6 +50,7 @@ export default function DashboardHome() {
         }}
       >
         <CircularProgress />
+        <Typography>Loading Dashboard...</Typography>
       </Box>
     );
   }
@@ -67,7 +64,7 @@ export default function DashboardHome() {
           fontFamily: "cursive"
         }}
       >
-        Admin Dashboard
+        Admin Dashboard,Welcome {stats.adminName}
       </Typography>
 
       <Box
@@ -77,7 +74,6 @@ export default function DashboardHome() {
           flexWrap: "wrap"
         }}
       >
-
         <Paper
           sx={{
             p: 4,
@@ -88,7 +84,6 @@ export default function DashboardHome() {
           <Typography variant="h5">
             Customers
           </Typography>
-
           <Typography
             variant="h3"
             color="primary"
@@ -96,8 +91,6 @@ export default function DashboardHome() {
             {stats.customers}
           </Typography>
         </Paper>
-
-  
         <Paper
           sx={{
             p: 4,
@@ -116,8 +109,6 @@ export default function DashboardHome() {
             {stats.users}
           </Typography>
         </Paper>
-
-
         <Paper
           sx={{
             p: 4,
@@ -128,7 +119,6 @@ export default function DashboardHome() {
           <Typography variant="h5">
             Bookings
           </Typography>
-
           <Typography
             variant="h3"
             color="success"

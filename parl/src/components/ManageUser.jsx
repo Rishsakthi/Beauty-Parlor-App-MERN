@@ -123,6 +123,7 @@ export default function ManageUser() {
                         <Pagination
                           count={totalPages}
                           page={page}
+                          
                           onChange={(event, value) => setPage(value)}
                           color="primary"
                         />

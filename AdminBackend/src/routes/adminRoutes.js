@@ -12,5 +12,5 @@ router.get("/frequent", auth, role("admin"), frequentCustomers);
 router.get("/top-services", auth, role("admin"), topServices);
 router.get("/users", auth,role("admin"), getUsers);
 router.delete("/users/:id", auth,role("admin"), deleteUser);
-router.get("/dashboardstats",auth,role("admin"),dashboardStats)
+router.get("/dashboardstats/:id",auth,role("admin"),dashboardStats)
 module.exports = router;

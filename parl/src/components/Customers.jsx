@@ -33,12 +33,14 @@ export default function Customers() {
       {loading ? (
       
               <Box
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                height="300px"
-                flexDirection="column"
-                gap={2}
+                sx={{
+                  display:"flex",
+                  justifyContent:"center",
+                  alignItems:"center",
+                  height:"300px",
+                  flexDirection:"column",
+                  gap:2
+                }}
               >
                 <CircularProgress />
                 <Typography>Loading Customers...</Typography>
