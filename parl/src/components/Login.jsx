@@ -7,7 +7,6 @@ import beauty from "../assets/beauty.jpg";
 export default function Login() {
 
   const navigate = useNavigate();
-
   const [token, setToken] = useState(() => localStorage.getItem("token"));
   const [form, setForm] = useState({ username: "", password: "" });
 
@@ -21,7 +20,6 @@ export default function Login() {
   };
   const handleLogin = async () => {
     try {
-
       const res = await axios.post(
         "http://localhost:7001/api/auth/login",
         form

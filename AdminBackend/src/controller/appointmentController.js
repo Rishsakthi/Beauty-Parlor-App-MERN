@@ -2,20 +2,39 @@ const Appointment = require("../models/appointmentModel");
 
 const addAppointment = async (req, res) => {
   try {
+      console.log(req.user)
+      console.log(req.user.id)
+
     const {
       name,
       phone,
       email,
       service,
+      city,
       appointmentdate,
-      occasion
+      occasion,
+      timeslot
     } = req.body;
 
+    const selectedDate = new Date(appointmentdate);
+      selectedDate.setHours(0, 0, 0, 0);
+      const nextDay = new Date(selectedDate);
+      nextDay.setDate(nextDay.getDate() + 1);
+      const existingBookings = await Appointment.countDocuments({
+        appointmentdate: {
+          $gte: selectedDate,
+          $lt: nextDay
+        },
+        timeslot: timeslot
+      });
+     if (existingBookings > 5) {
+      return res.status(400).json({
+        message: "This time slot is already full for the selected day"
+      });
+    }
     const frontimage = req.files?.frontfile?.[0]?.filename || null;
     const backimage = req.files?.backfile?.[0]?.filename || null;
-
       let parsedService = [];
-
       try {
         if (typeof service === "string") {
           parsedService = JSON.parse(service);
@@ -49,7 +68,11 @@ const addAppointment = async (req, res) => {
       appointmentdate: parsedDate,
       occasion,
       frontimage,
-      backimage
+      city,
+      backimage,
+      timeslot,
+      userId: req.user.id
+
     });
 
     await newAppointment.save();
@@ -66,7 +89,6 @@ const addAppointment = async (req, res) => {
 const getAllAppointments = async (req, res) => {
   try {
     const data = await Appointment.find().sort({ createdAt: 1 });
-
     res.status(200).json(data);
   } catch (err) {
     console.log(err);
@@ -74,5 +96,42 @@ const getAllAppointments = async (req, res) => {
   }
 };
 
+const getMyBookings = async (req, res) => {
+  try {
+    const data = await Appointment.find({
+      userId: req.user.id
+    });
 
-module.exports = { addAppointment,getAllAppointments };
+    res.status(200).json(data);
+
+  } catch (err) {
+
+    res.status(500).json({
+      message: "Error fetching bookings"
+    });
+
+  }
+};
+const deleteBooking = async (req, res) => {
+
+  try {
+
+    await Appointment.findByIdAndDelete(req.params.id);
+
+    res.status(200).json({
+      message: "Booking cancelled"
+    });
+
+  } catch (err) {
+
+    console.log(err);
+
+    res.status(500).json({
+      message: "Error deleting booking"
+    });
+
+  }
+
+};
+
+module.exports = { addAppointment,getAllAppointments,getMyBookings,deleteBooking };

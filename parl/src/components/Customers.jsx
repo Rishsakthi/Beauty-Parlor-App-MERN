@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
-import { Box, Typography, Paper,Pagination,CircularProgress } from "@mui/material";
+import { Box, Typography, Paper,Pagination,CircularProgress,FormControl,FormLabel,InputLabel,Select
+  ,MenuItem
+ } from "@mui/material";
 import axios from "axios";
 
 export default function Customers() {
@@ -7,6 +9,7 @@ export default function Customers() {
   const[page,setPage]=useState(1);
   const itemsPerPage=10;
   const [loading, setLoading] = useState(true);
+  const [city, setCity] = useState("All");
 
 
   useEffect(() => {
@@ -20,15 +23,38 @@ export default function Customers() {
     .finally(()=>setLoading(false));
 
   }, []);
-  
+    const cities = [
+    "All",
+    ...new Set(data.map((s) => s._id))
+  ];
   const totalPages=Math.ceil(data.length/itemsPerPage);
   const startIndex=(page-1)*itemsPerPage;
   const endIndex=startIndex+itemsPerPage;
   const currentData=data.slice(startIndex,endIndex);
+    const filteredData =
+    city === "All"
+      ? currentData
+      : currentData.filter((s) => s._id=== city);
+
+
 
   return (
     <Box>
-      <Typography variant="h5" mb={2}>Frequent Customers.....</Typography>
+      <Typography variant="h5" mb={2}>Customers.....</Typography>
+      <FormControl sx={{ minWidth: 200, mb: 3 }}>
+        <InputLabel>City</InputLabel>
+        <Select
+          value={city}
+          label="City"
+          onChange={(e) => setCity(e.target.value)}
+        >
+          {cities.map((c) => (
+            <MenuItem key={c} value={c}>
+              {c}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
 
       {loading ? (
       
@@ -48,9 +74,18 @@ export default function Customers() {
       
             ) :(
               <>
-      {currentData.map((c) => (
+      {filteredData.map((c) => (
         <Paper key={c._id} sx={{ p: 2, mb: 1 }}>
-          {c.name} — Visits: {c.visits}
+          <Typography>
+                <b>City:</b> {c._id}
+          </Typography>
+          <Typography>
+                {c.name}
+          </Typography>
+           <Typography>
+                Visits: {c.visits}
+          </Typography>
+          
         </Paper>
       ))}
        <Box display="flex"sx={{justifyContent:"center" ,mt:3}} >

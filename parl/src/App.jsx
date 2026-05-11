@@ -17,6 +17,7 @@ import AppointmentForm from './components/AppointmentForm'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import ManageUser from './components/ManageUser'
 import { Box } from '@mui/material'
+import Bookings from './components/Bookings'
 
 function AdminRoute({ children }) {
   const role = localStorage.getItem("role");
@@ -48,7 +49,7 @@ function App() {
               <Route path='/contact' element={<Contact />} />
               <Route path='/login' element={<Login />} />
               <Route path='/register' element={<Register />} />
-
+              <Route path="/bookings" element={<Bookings/>}/>
               <Route
                 path="/dashboard"
                 element={

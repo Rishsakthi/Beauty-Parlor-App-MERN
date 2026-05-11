@@ -1,10 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState,useMemo } from "react";
 import {
   Box,
   Typography,
   Paper,
   Pagination,
-  CircularProgress
+  CircularProgress,
+  Button,
+  TextField,
+  FormControl,
+  FormLabel,
+  InputLabel,
+  MenuItem,
+  Select
 } from "@mui/material";
 import axios from "axios";
 
@@ -34,6 +41,10 @@ export default function Bookings() {
   const [data, setData] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [sortOrder,setSortOrder]=useState("asc");
+  const [startDate,setStartDate]=useState("");
+  const [endDate,setEndDate]=useState("");
+  const [city, setCity] = useState("All");
 
   const itemsPerPage = 3;
 
@@ -44,34 +55,67 @@ export default function Bookings() {
       }
     })
     .then(res => {
-      console.log("DATA FROM BACKEND:", res.data);
       setData(res.data);
     })
     .catch(err => console.log(err))
     .finally(() => setLoading(false));
   }, []);
+   
+ const filteredData = useMemo(() => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
-  const filteredData = data
+  return data
     .filter((b) => {
-      const appointmentDate = new Date(b.appointmentdate);
-      const today = new Date();
-      appointmentDate.setHours(0, 0, 0, 0);
-      today.setHours(0, 0, 0, 0);
-      return appointmentDate >= today;
+      const apptDate = new Date(b.appointmentdate);
+      if (city !== "All" && b.city !== city) {
+        return false;
+      }
+      if (startDate && endDate) {
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+        start.setHours(0, 0, 0, 0);
+        end.setHours(23, 59, 59, 999);
+        return apptDate >= start && apptDate <= end;
+      }
+      apptDate.setHours(0, 0, 0, 0);
+      return apptDate >= today;
     })
-    .sort((a, b) => new Date(a.appointmentdate) - new Date(b.appointmentdate));
-
+    .sort((a, b) => {
+      const dateA = new Date(a.appointmentdate).getTime();
+      const dateB = new Date(b.appointmentdate).getTime();
+      return sortOrder === "asc"
+        ? dateA - dateB
+        : dateB - dateA;
+    });
+  }, [data, sortOrder, startDate, endDate, city]);
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const startIndex = (page - 1) * itemsPerPage;
   const endIndex= startIndex + itemsPerPage;
   const currentData = filteredData.slice(startIndex,endIndex);
-
+  const cities = [
+      "All",
+      ...new Set(data.map((s) => s.city))
+    ];
   return (
     <Box>
       <Typography variant="h5" mb={2}>
         All Bookings.....
       </Typography>
-
+      <FormControl sx={{ minWidth: 200, mb: 3 }}>
+              <InputLabel>City</InputLabel>
+              <Select
+                value={city}
+                label="City"
+                onChange={(e) => setCity(e.target.value)}
+              >
+                {cities.map((c) => (
+                  <MenuItem key={c} value={c}>
+                    {c}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
       {loading ? (
         <Box
         sx={{display:"flex",
@@ -80,18 +124,38 @@ export default function Bookings() {
           height:"300px",
           flexDirection:"column",
           gap:2}}
-          
         >
           <CircularProgress />
           <Typography>Loading bookings...</Typography>
         </Box>
-
       ) : (
         <>
+          <Button 
+            variant="outlined" 
+            onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
+          >
+            Sort: {sortOrder === "asc" ? "Oldest First" : "Newest First"}
+          </Button>
+          <Box  spacing={2} mb={3}>
+              FROM             
+              <TextField
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+              />
+              TO
+              <TextField
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+              />
+              <Button variant="text" onClick={() => { setStartDate(""); setEndDate(""); }}>
+                Reset
+              </Button>
+            </Box>
           {currentData.map((b) => {
             const label = getDateLabel(b.appointmentdate);
             const colors = dateColors[label];
-
             return (
               <Paper
                 key={b._id}
@@ -108,6 +172,7 @@ export default function Bookings() {
 
                 <Typography><b>Name:</b> {b.name}</Typography>
                 <Typography><b>Phone:</b> {b.phone}</Typography>
+                <Typography><b>location:</b>{b.city}</Typography>
                 <Typography><b>Service:</b> {b.service.join(", ")}</Typography>
                 <Typography><b>Occasion:</b> {b.occasion}</Typography>
                 <Typography>

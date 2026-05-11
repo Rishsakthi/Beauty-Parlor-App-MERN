@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import {
   Typography,
   Box,
@@ -8,7 +9,7 @@ import {
 } from "@mui/material";
 
 export default function DashboardHome() {
-
+  const navigate=useNavigate();
   const [stats, setStats] = useState({
     customers: 0,
     users: 0,
@@ -64,7 +65,9 @@ export default function DashboardHome() {
           fontFamily: "cursive"
         }}
       >
-        Admin Dashboard,Welcome {stats.adminName}
+        Admin Dashboard,Welcome {stats.adminName},
+        <br/>
+        Click to View Stats
       </Typography>
 
       <Box
@@ -80,6 +83,7 @@ export default function DashboardHome() {
             width: 250,
             textAlign: "center"
           }}
+          onClick={()=>{navigate("/dashboard/customers")}}
         >
           <Typography variant="h5">
             Customers
@@ -97,6 +101,7 @@ export default function DashboardHome() {
             width: 250,
             textAlign: "center"
           }}
+          onClick={()=>{navigate("/dashboard/manageuser")}}
         >
           <Typography variant="h5">
             Users
@@ -115,6 +120,8 @@ export default function DashboardHome() {
             width: 250,
             textAlign: "center"
           }}
+          onClick={()=>{navigate("/dashboard/booking")}}
+
         >
           <Typography variant="h5">
             Bookings

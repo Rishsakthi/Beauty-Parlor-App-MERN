@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const multer = require("multer");
-const { addAppointment, getAllAppointments } = require("../controller/appointmentController");
+const { addAppointment, getAllAppointments, getMyBookings, deleteBooking } = require("../controller/appointmentController");
 const auth = require("../middlewares/authMiddleware");
 
 
@@ -26,5 +26,7 @@ router.post(
 );
 
 router.get("/all",auth, getAllAppointments);
+router.get("/mybookings",auth,getMyBookings);
+router.delete("/delete/:id", auth, deleteBooking);
 
 module.exports = router;

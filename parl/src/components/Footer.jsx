@@ -16,7 +16,7 @@ const Footer = () => {
       <Typography variant="body1" sx={{
             fontFamily:"cursive"
         }}>
-        © 2026 Beauty Parlor. All rights reserved.
+        2026 Beauty Parlor. All rights reserved.
       </Typography>
 
       <Typography variant="body2" sx={{

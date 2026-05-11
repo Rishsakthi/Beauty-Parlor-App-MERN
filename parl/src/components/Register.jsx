@@ -37,10 +37,8 @@ export default function Register() {
       navigate("/login");
 
     } catch (err) {
-
       const message =
         err.response?.data?.message || "Registration failed";
-
       setError(message);
       setOpen(true);
     }

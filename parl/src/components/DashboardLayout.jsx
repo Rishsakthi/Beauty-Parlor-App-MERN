@@ -17,20 +17,11 @@ export default function DashboardLayout() {
           Dashboard
         </Button>
 
-        <Button fullWidth onClick={() => navigate("/dashboard/customers")}>
-          Customers
-        </Button>
 
         <Button fullWidth onClick={() => navigate("/dashboard/AdminServices")}>
           Services
         </Button>
 
-        <Button fullWidth onClick={() => navigate("/dashboard/booking")}>
-          Booking
-        </Button>
-        <Button fullWidth onClick={() => navigate("/dashboard/manageuser")}>
-          Manage User
-        </Button>
       </Box>
 
 

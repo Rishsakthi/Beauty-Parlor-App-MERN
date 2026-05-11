@@ -1,7 +1,8 @@
 import {
   Box, RadioGroup, Radio, Typography, TextField, FormControl,
   Checkbox, FormGroup, Select, MenuItem, Button, FormLabel,
-  FormControlLabel, TextareaAutosize, FormHelperText
+  FormControlLabel, TextareaAutosize, FormHelperText, InputLabel
+
 } from '@mui/material'
 import { useState } from 'react';
 import axios from 'axios';
@@ -20,6 +21,8 @@ export default function Form() {
     occasion: "",
     appointmentdate: "",
     service: [],
+    timeslot: ""
+
   };
 
   const [User, setUser] = useState(initialState);
@@ -143,6 +146,13 @@ export default function Form() {
     setUser((prev) => ({ ...prev, city: value }));
     validateField("city", value);
   };
+  const handleChange = (e) => {
+    setUser({
+      ...User,
+      [e.target.name]: e.target.value
+    });
+
+  };
 
   const handlesubmit = async (e) => {
     e.preventDefault();
@@ -183,7 +193,6 @@ export default function Form() {
   const fieldStyle = { marginBottom: "24px" };
 
   return (
-
     <Box
       sx={{
         minHeight: "100vh",
@@ -194,7 +203,6 @@ export default function Form() {
         py: 5
       }}
     >
-
       <Box
         sx={{
           display: "flex",
@@ -210,7 +218,6 @@ export default function Form() {
           color: "white"
         }}
       >
-
         <Typography
           variant='h4'
           sx={{
@@ -224,7 +231,6 @@ export default function Form() {
         >
           WELCOME TO SAKTHI PARLOR
         </Typography>
-
         <form
           onSubmit={handlesubmit}
           style={{
@@ -233,7 +239,6 @@ export default function Form() {
             flexDirection: "column",
           }}
         >
-
           <div style={fieldStyle}>
             <TextField
               fullWidth
@@ -257,7 +262,6 @@ export default function Form() {
               }}
             />
           </div>
-
           <div style={fieldStyle}>
             <TextField
               fullWidth
@@ -281,7 +285,6 @@ export default function Form() {
               }}
             />
           </div>
-
           <div style={fieldStyle}>
             <TextField
               fullWidth
@@ -303,11 +306,9 @@ export default function Form() {
               }}
             />
           </div>
-
           <div style={fieldStyle}>
             <FormControl error={!!errors.gender}>
               <FormLabel sx={{ color: "white" }}>Gender</FormLabel>
-
               <RadioGroup
                 value={User.gender}
                 onChange={(e) => {
@@ -319,15 +320,12 @@ export default function Form() {
                 <FormControlLabel value="Female" control={<Radio sx={{ color: "white" }} />} label="Female" />
                 <FormControlLabel value="others" control={<Radio sx={{ color: "white" }} />} label="Don't want to mention" />
               </RadioGroup>
-
               {errors.gender && <FormHelperText>{errors.gender}</FormHelperText>}
             </FormControl>
           </div>
-
           <div style={fieldStyle}>
             <FormControl fullWidth error={!!errors.country}>
               <FormLabel sx={{ color: "white", mb: 1 }}>Country</FormLabel>
-
               <Select
                 value={User.country}
                 onChange={handleCountryChange}
@@ -341,11 +339,9 @@ export default function Form() {
                 <MenuItem value="USA">USA</MenuItem>
                 <MenuItem value="Canada">Canada</MenuItem>
               </Select>
-
               {errors.country && <FormHelperText>{errors.country}</FormHelperText>}
             </FormControl>
           </div>
-
           <div style={fieldStyle}>
             <FormControl fullWidth error={!!errors.city}>
               <FormLabel sx={{ color: "white", mb: 1 }}>City</FormLabel>
@@ -363,16 +359,13 @@ export default function Form() {
                   <MenuItem key={city} value={city}>{city}</MenuItem>
                 ))}
               </Select>
-
               {errors.city && <FormHelperText>{errors.city}</FormHelperText>}
             </FormControl>
           </div>
-
           <div style={fieldStyle}>
             <FormLabel sx={{ color: "white", mb: 1 }}>
               Address
             </FormLabel>
-
             <TextareaAutosize
               style={{
                 width: "100%",
@@ -390,27 +383,22 @@ export default function Form() {
                 validateField("address", e.target.value);
               }}
             />
-
             {errors.address && <FormHelperText error>{errors.address}</FormHelperText>}
           </div>
-
           <div style={fieldStyle}>
             <FormControl error={!!errors.service}>
               <FormLabel sx={{ color: "white", mb: 1 }}>
                 Services
               </FormLabel>
-
               <FormGroup>
                 <FormControlLabel control={<Checkbox sx={{ color: "white" }} checked={User.service.includes("Hair Cut")} onChange={handleServiceChange} value="Hair Cut" />} label="Hair Cut" />
                 <FormControlLabel control={<Checkbox sx={{ color: "white" }} checked={User.service.includes("Facial")} onChange={handleServiceChange} value="Facial" />} label="Facial" />
                 <FormControlLabel control={<Checkbox sx={{ color: "white" }} checked={User.service.includes("Threading")} onChange={handleServiceChange} value="Threading" />} label="Threading" />
                 <FormControlLabel control={<Checkbox sx={{ color: "white" }} checked={User.service.includes("Waxing")} onChange={handleServiceChange} value="Waxing" />} label="Waxing" />
               </FormGroup>
-
               {errors.service && <FormHelperText>{errors.service}</FormHelperText>}
             </FormControl>
           </div>
-
           <div style={fieldStyle}>
             <Button
               fullWidth
@@ -425,14 +413,12 @@ export default function Form() {
                 }
               }}
             >
-              Upload Front
+              Upload Front Aadhar
               <input type="file" hidden onChange={handleFrontFile} />
             </Button>
-
             {frontfile && <Box mt={1}>{frontfile.name}</Box>}
             {errors.frontfile && <FormHelperText error>{errors.frontfile}</FormHelperText>}
           </div>
-
           <div style={fieldStyle}>
             <Button
               fullWidth
@@ -447,14 +433,12 @@ export default function Form() {
                 }
               }}
             >
-              Upload Back
+              Upload Back Aadhar
               <input type="file" hidden onChange={handleBackFile} />
             </Button>
-
             {backfile && <Box mt={1}>{backfile.name}</Box>}
             {errors.backfile && <FormHelperText error>{errors.backfile}</FormHelperText>}
           </div>
-
           <div style={fieldStyle}>
             <TextField
               fullWidth
@@ -476,13 +460,65 @@ export default function Form() {
               }}
             />
           </div>
-
+         <div style={fieldStyle}>
+            <FormControl
+              fullWidth
+              sx={{
+                mb: 2,
+                "& .MuiOutlinedInput-root": {
+                  borderRadius: 3,
+                  background: "#111",
+                  color: "white",
+                },
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "white",
+                },
+                "&:hover .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "white",
+                },
+                "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#1976d2",
+                },
+              }}
+            >
+              <FormLabel sx={{ color: "white", mb: 1 }}>
+                Time Slot
+              </FormLabel>
+              <Select
+                name="timeslot"
+                value={User.timeslot}
+                onChange={handleChange}
+                displayEmpty
+                MenuProps={{
+                  PaperProps: {
+                    sx: {
+                      bgcolor: "#111",
+                      "& .MuiMenuItem-root": {
+                        color: "white",
+                      },
+                      "& .MuiMenuItem-root:hover": {
+                        bgcolor: "#222",
+                      },
+                      "& .Mui-selected": {
+                        bgcolor: "#333 !important",
+                      },
+                    },
+                  },
+                }}
+              >
+                <MenuItem value="10:00 AM">10:00 AM</MenuItem>
+                <MenuItem value="11:00 AM">11:00 AM</MenuItem>
+                <MenuItem value="12:00 PM">12:00 PM</MenuItem>
+                <MenuItem value="2:00 PM">2:00 PM</MenuItem>
+                <MenuItem value="4:00 PM">4:00 PM</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
           <div style={fieldStyle}>
             <FormControl fullWidth>
               <FormLabel sx={{ color: "white", mb: 1 }}>
                 Occasion
               </FormLabel>
-
               <Select
                 value={User.occasion}
                 onChange={(e) => {
@@ -499,11 +535,9 @@ export default function Form() {
                 <MenuItem value="Party">Party</MenuItem>
                 <MenuItem value="Regular">Regular</MenuItem>
               </Select>
-
               {errors.occasion && <FormHelperText error>{errors.occasion}</FormHelperText>}
             </FormControl>
           </div>
-
           <Button
             style={fieldStyle}
             type="submit"
@@ -522,7 +556,6 @@ export default function Form() {
           >
             Submit
           </Button>
-
         </form>
       </Box>
     </Box>

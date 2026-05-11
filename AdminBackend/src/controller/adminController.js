@@ -6,7 +6,7 @@ const frequentCustomers = async (req, res) => {
   const data = await Appointment.aggregate([
     {
       $group: {
-        _id: "$phone",
+        _id: "$city",
         name: { $first: "$name" },
         visits: { $sum: 1 }
       }
@@ -22,19 +22,24 @@ const topServices = async (req, res) => {
     { $unwind: "$service" },
     {
       $group: {
-        _id: "$service",
+        _id: {
+          city: "$city",
+          service: "$service"
+        },
         count: { $sum: 1 }
       }
     },
     { $sort: { count: -1 } }
   ]);
-
   res.json(data);
 };
 
 const getUsers = async (req, res) => {
   try{
-  const users = await User.find().select("-password");
+  const users = await User.find( {isDeleted: false}).select("-password");
+
+
+
   res.json(users);
   }
   catch(err){
@@ -43,12 +48,13 @@ const getUsers = async (req, res) => {
 };
 
 const deleteUser = async (req, res) => {
-  try{
-  await User.findByIdAndDelete(req.params.id);
-  res.json({ message: "User deleted" });
-  }
-  catch(err){
-    console.log(err)
+  try {
+    await User.findByIdAndUpdate(req.params.id, {
+      isDeleted: true
+    });
+    res.json({ message: "User deleted successfully" });
+  } catch (err) {
+    console.log(err);
   }
 };
 const dashboardStats = async (req, res) => {

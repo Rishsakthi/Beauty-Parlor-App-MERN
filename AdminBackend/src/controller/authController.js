@@ -65,5 +65,32 @@ const login = async (req, res) => {
     res.status(500).json({ message: "Something Went Wrong" });
   }
 };
+const adminRegister = async (req, res) => {
+  try {
+    const { username, password } = req.body;
 
-module.exports = { register, login };
+    const existingAdmin = await User.findOne({ username });
+    if (existingAdmin) {
+      return res.status(400).json({ message: "Admin already exists" });
+    }
+
+    const hashpassword = await bcrypt.hash(password, 10);
+
+    const newAdmin = new User({
+      username,
+      password: hashpassword,
+      role: "admin"
+    });
+
+    await newAdmin.save();
+
+    res.status(201).json({
+      message: `Admin registered with username ${username}`
+    });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Something Went Wrong" });
+  }
+};
+module.exports = { register, login,adminRegister };
