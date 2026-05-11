@@ -43,7 +43,6 @@ export default function Booking() {
     console.log(err);
   }
 };
-
   return (
     <Box sx={{ p: 3 }}>
       <Typography variant="h4" mb={3}>
@@ -120,14 +119,10 @@ export default function Booking() {
                 </TableRow>
 
               ))
-
             )}
-
           </TableBody>
         </Table>
-
       </TableContainer>
-
     </Box>
   );
 }
